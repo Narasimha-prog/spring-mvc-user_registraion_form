@@ -3,52 +3,71 @@
 <html>
 <head>
     <title>Users List</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8">
+<body class="bg-light">
 
-<div class="bg-white shadow-md rounded-lg w-full max-w-5xl p-6">
-    <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Registered Users</h2>
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4 text-primary">Registered Users</h2>
+       <!-- Flash message -->
+            <c:if test="${not empty successMessage}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${successMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+            <c:if test="${not empty users}">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Sex</th>
+                            <th scope="col">Address</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="user" items="${users}" varStatus="status">
+                            <tr>
+                                <th >${status.index + 1}</th>
+                                <td>${user.name}</td>
+                                <td>${user.age}</td>
+                                <td>${user.sex}</td>
+                                <td>${user.address}</td>
+                                <td class="text-center">
+                                    <a href="${pageContext.request.contextPath}/users/edit/${user.id}" 
+                                       class="btn btn-warning btn-sm me-2">
+                                       Update
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/users/delete/${user.id}" 
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Are you sure you want to delete this user?');">
+                                       Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
 
-    <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-        <thead class="bg-blue-100">
-            <tr>
-                <th class="py-2 px-4 text-left">#</th>
-                <th class="py-2 px-4 text-left">Name</th>
-                <th class="py-2 px-4 text-left">Age</th>
-                <th class="py-2 px-4 text-left">Sex</th>
-                <th class="py-2 px-4 text-left">Address</th>
-                <th class="py-2 px-4 text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="user"  items="${users}" varStatus="status">
-                <tr class="border-t hover:bg-gray-50">
-                    <td class="py-2 px-4">${status.index + 1}</td>
-                    <td class="py-2 px-4">${user.name}</td>
-                    <td class="py-2 px-4">${user.age}</td>
-                    <td class="py-2 px-4">${user.sex}</td>
-                    <td class="py-2 px-4">${user.address}</td>
-                    <td class="py-2 px-4 flex justify-center space-x-2">
-                        <a href="/users/edit/${user.id}" 
-                           class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 transition duration-200">
-                           Update
-                        </a>
-                        <a href="/users/delete/${user.id}" 
-                           class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-200"
-                           onclick="return confirm('Are you sure you want to delete this user?');">
-                           Delete
-                        </a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
+            <c:if test="${empty users}">
+                <div class="alert alert-info text-center">
+                    No users found. Click below to add a new user.
+                </div>
+            </c:if>
 
-    <div class="mt-6 text-center">
-        <a href="/users/register" class="text-white bg-blue-600 py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
-            Register New User
-        </a>
+            <div class="text-center mt-4">
+                <a href="${pageContext.request.contextPath}/users/register" 
+                   class="btn btn-primary">Add New User</a>
+            </div>
+        </div>
     </div>
 </div>
 

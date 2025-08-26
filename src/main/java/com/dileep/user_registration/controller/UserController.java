@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.dileep.user_registration.dto.RegisterDTO;
 import com.dileep.user_registration.dto.UserDTO;
 import jakarta.validation.Valid;
@@ -32,12 +34,13 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("registerDTO") RegisterDTO dto,
                                BindingResult result,
-                               Model model) {
+                               RedirectAttributes redirectAttributes) {
     	log.info("User Register Data: {}",dto.toString());
         if (result.hasErrors()) {
             return "register";
         }
         userService.register(dto);
+        redirectAttributes.addFlashAttribute("successMessage", "User registered successfully!");
         return "redirect:/users/list";
     }
 
@@ -58,18 +61,22 @@ public class UserController {
     // Handle update
     @PostMapping("/update")
     public String updateUser(@Valid @ModelAttribute("userDTO") UserDTO dto,
-                             BindingResult result) {
+                             BindingResult result,RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "update";
         }
         userService.update(dto);
+        redirectAttributes.addFlashAttribute("successMessage", "User updated successfully!");
         return "redirect:/users/list";
+    
     }
 
     // Delete user
     @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable Long id) {
+    public String deleteUser(@PathVariable Long id,RedirectAttributes redirectAttributes) {
         userService.delete(id);
+        
+        redirectAttributes.addFlashAttribute("successMessage", "User Deleted successfully!");
         return "redirect:/users/list";
     }
 }
