@@ -1,0 +1,7 @@
+spring:
+  application:
+        name: user-registration
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
